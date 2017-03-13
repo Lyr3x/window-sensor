@@ -35,17 +35,17 @@
 //#define MY_RADIO_RFM69
 
 #include <SPI.h>
-//#include <MySensors.h>
+#include <MySensors.h>
 #include <Bounce2.h>
 
 #define CHILD_ID 3
-#define BUTTON_PIN  2  // Arduino Digital I/O pin for button/reed switch
+#define BUTTON_PIN  3  // Arduino Digital I/O pin for button/reed switch
 
 Bounce debouncer = Bounce();
 int oldValue=-1;
 
 // Change to V_LIGHT if you use S_LIGHT in presentation below
-//MyMessage msg(CHILD_ID,V_TRIPPED);
+MyMessage msg(CHILD_ID,V_TRIPPED);
 
 void setup()
 {
@@ -65,7 +65,7 @@ void presentation() {
   // Register binary input sensor to gw (they will be created as child devices)
   // You can use S_DOOR, S_MOTION or S_LIGHT here depending on your usage.
   // If S_LIGHT is used, remember to update variable type you send in. See "msg" above.
-  // present(CHILD_ID, S_DOOR);
+  present(CHILD_ID, S_DOOR);
 }
 
 
@@ -75,15 +75,20 @@ void loop()
   debouncer.update();
   // Get the update value
   int value = debouncer.read();
-  Serial.print("Old value: ");
-  Serial.println(oldValue);
+  // Serial.print("Old value: ");
+  // Serial.println(oldValue);
 
   delay(100);
   if (value != oldValue) {
      // Send in the new value
-    //  send(msg.set(value==HIGH ? 1 : 0));
-    Serial.print("New value: ");
-    Serial.println(value);
+     send(msg.set(value==HIGH ? 1 : 0));
+    if(value==HIGH){
+        Serial.println("window is open");
+    }else{
+      Serial.println("window is closed");
+    }
+    // Serial.print("New value: ");
+    // Serial.println(value);
      oldValue = value;
   }
 }
