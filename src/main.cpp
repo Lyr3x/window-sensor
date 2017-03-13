@@ -29,7 +29,7 @@
 
 // Enable debug prints to serial monitor
 #define MY_DEBUG
-
+#define SLEEP_TIME 0
 // Enable and select radio type attached
 #define MY_RADIO_NRF24
 //#define MY_RADIO_RFM69
@@ -37,6 +37,7 @@
 #include <SPI.h>
 #include <MySensors.h>
 #include <Bounce2.h>
+#include <Arduino.h>
 
 #define CHILD_ID 3
 #define BUTTON_PIN  3  // Arduino Digital I/O pin for button/reed switch
@@ -72,6 +73,9 @@ void presentation() {
 //  Check if digital input has changed and send in new value
 void loop()
 {
+
+
+  sleep(digitalPinToInterrupt(BUTTON_PIN), RISING, SLEEP_TIME);
   debouncer.update();
   // Get the update value
   int value = debouncer.read();
