@@ -72,12 +72,8 @@ void presentation() {
 //  Check if digital input has changed and send in new value
 void loop()
 {
-
-  Serial.println("Befor sleep");
-  delay(100);
   sleep(digitalPinToInterrupt(BUTTON_PIN), CHANGE, SLEEP_TIME);
   delay(500);
-  Serial.println("After Sleep");
   // Get the update value
 for (size_t i = 0; i < 5; i++) {
   debouncer.update();
@@ -85,23 +81,25 @@ for (size_t i = 0; i < 5; i++) {
   delay(10);
   /* code */
 }
-
+#ifdef MY_DEBUG
     Serial.print("New value: ");
     Serial.println(value);
-
-
-  Serial.print("Old value: ");
-  Serial.println(oldValue);
+    Serial.print("Old value: ");
+    Serial.println(oldValue);
+#endif
 
   delay(100);
   if (value != oldValue) {
      // Send in the new value
      send(msg.set(value==HIGH ? 1 : 0));
+
+    #ifdef MY_DEBUG
     if(value==HIGH){
         Serial.println("window is open");
     }else{
       Serial.println("window is closed");
     }
+    #endif
     // Serial.print("New value: ");
     // Serial.println(value);
      oldValue = value;
