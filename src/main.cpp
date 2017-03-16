@@ -44,6 +44,7 @@
 
 Bounce debouncer = Bounce();
 int oldValue=-1;
+int value = -1;
 
 // Change to V_LIGHT if you use S_LIGHT in presentation below
 MyMessage msg(CHILD_ID,V_TRIPPED);
@@ -74,13 +75,25 @@ void presentation() {
 void loop()
 {
 
-
-  sleep(digitalPinToInterrupt(BUTTON_PIN), RISING, SLEEP_TIME);
-  debouncer.update();
+  Serial.println("Befor sleep");
+  delay(100);
+  sleep(digitalPinToInterrupt(BUTTON_PIN), CHANGE, SLEEP_TIME);
+  delay(500);
+  Serial.println("After Sleep");
   // Get the update value
-  int value = debouncer.read();
-  // Serial.print("Old value: ");
-  // Serial.println(oldValue);
+for (size_t i = 0; i < 5; i++) {
+  debouncer.update();
+  value = debouncer.read();
+  delay(10);
+  /* code */
+}
+
+    Serial.print("New value: ");
+    Serial.println(value);
+
+
+  Serial.print("Old value: ");
+  Serial.println(oldValue);
 
   delay(100);
   if (value != oldValue) {
