@@ -20,10 +20,8 @@
  *
  * DESCRIPTION
  *
- * Simple binary switch example
- * Connect button or door/window reed switch between
- * digitial I/O pin 3 (BUTTON_PIN below) and GND.
- * http://www.mysensors.org/build/binary
+ * window/door sensor with sleep function
+ * Future: Batterylevel sending!
  */
 
 
