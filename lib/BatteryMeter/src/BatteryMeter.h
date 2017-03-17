@@ -8,7 +8,6 @@ extern float voltage;
 #ifndef BatteryMeter_h
 #define BatteryMeter_h
 
-#include "../MySensors/core/MySensorsCore.h"
 #include "SPI.h"
 #include "Arduino.h"
 class BatteryMeter
