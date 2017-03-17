@@ -15,6 +15,7 @@ class BatteryMeter
   public:
     BatteryMeter(int pin);
     float checkBatteryLevel();
+    long BatteryMeter::readVcc();
   private:
     int _pin;
 };

@@ -54,7 +54,7 @@ MyMessage msg(CHILD_ID,V_TRIPPED);
 
 BatteryMeter battery(3); //BatteryMeter instance
 #define CHILD_ID_BATTERY 2  //MySensors Battery child ID
-#define BATTERY_FULL 3.3 // a 18650 lithium ion battery usually give 4.2V when full
+#define BATTERY_FULL 2.95 // a 18650 lithium ion battery usually give 4.2V when full
 #define BATTERY_ZERO 2.4 // 2.4V limit for 328p at 16MHz. 1.9V, limit for nrf24l01 without
 MyMessage voltage_msg(CHILD_ID_BATTERY, V_VOLTAGE); //MySensors battery voltage message instance
 void sendBatteryStatus();
@@ -84,6 +84,7 @@ void presentation() {
 void loop()
 {
   sendBatteryStatus();
+  delay(500);
   sleep(digitalPinToInterrupt(BUTTON_PIN), CHANGE, SLEEP_TIME);
   delay(500);
   getDebouncedValue();
