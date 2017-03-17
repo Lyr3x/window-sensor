@@ -15,7 +15,7 @@ float BatteryMeter::checkBatteryLevel()
 {
   sensorValue = analogRead(_pin);
 	batteryPcnt = sensorValue / 10;
-	voltage = sensorValue * (5.00/1023.00);
+	voltage = sensorValue * (3.30/1023.00);
 
 	if(oldvoltage != voltage){
 		oldvoltage = voltage;
