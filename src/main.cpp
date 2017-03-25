@@ -36,6 +36,7 @@
 #include <MySensors.h>
 #include <Bounce2.h>
 #include <Arduino.h>
+#include <BatteryMeter.h>
 
 #define CHILD_ID 3
 #define BUTTON_PIN  3  // Arduino Digital I/O pin for button/reed switch
@@ -43,9 +44,20 @@
 Bounce debouncer = Bounce();
 int oldValue=-1;
 int value = -1;
+int getDebouncedValue();
 
 // Change to V_LIGHT if you use S_LIGHT in presentation below
 MyMessage msg(CHILD_ID,V_TRIPPED);
+
+
+
+
+BatteryMeter battery(3); //BatteryMeter instance
+#define CHILD_ID_BATTERY 2  //MySensors Battery child ID
+#define BATTERY_FULL 2.95 // a 18650 lithium ion battery usually give 4.2V when full
+#define BATTERY_ZERO 2.4 // 2.4V limit for 328p at 16MHz. 1.9V, limit for nrf24l01 without
+MyMessage voltage_msg(CHILD_ID_BATTERY, V_VOLTAGE); //MySensors battery voltage message instance
+void sendBatteryStatus();
 
 void setup()
 {
@@ -66,21 +78,17 @@ void presentation() {
   // You can use S_DOOR, S_MOTION or S_LIGHT here depending on your usage.
   // If S_LIGHT is used, remember to update variable type you send in. See "msg" above.
   present(CHILD_ID, S_DOOR);
+  present(CHILD_ID_BATTERY, S_CUSTOM);  //battery level
 }
-
-
 //  Check if digital input has changed and send in new value
 void loop()
 {
+  sendBatteryStatus();
+  delay(500);
   sleep(digitalPinToInterrupt(BUTTON_PIN), CHANGE, SLEEP_TIME);
   delay(500);
-  // Get the update value
-for (size_t i = 0; i < 5; i++) {
-  debouncer.update();
-  value = debouncer.read();
-  delay(10);
-  /* code */
-}
+  getDebouncedValue();
+
 #ifdef MY_DEBUG
     Serial.print("New value: ");
     Serial.println(value);
@@ -104,4 +112,21 @@ for (size_t i = 0; i < 5; i++) {
     // Serial.println(value);
      oldValue = value;
   }
+}
+
+int getDebouncedValue(){
+  // Get the update value
+  for (size_t i = 0; i < 5; i++) {
+    debouncer.update();
+    value = debouncer.read();
+    delay(10);
+    /* code */
+  }
+  return value;
+}
+
+void sendBatteryStatus(){
+  float voltage = battery.checkBatteryLevel();
+  send(voltage_msg.set(voltage, 3)); // redVcc returns millivolts. Set wants volts and how many decimals (3 in our case)
+  sendBatteryLevel(round((voltage - BATTERY_ZERO) * 100.0 / (BATTERY_FULL - BATTERY_ZERO)));
 }
