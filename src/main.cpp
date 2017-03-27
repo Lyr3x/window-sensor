@@ -27,7 +27,12 @@
 
 // Enable debug prints to serial monitor
 #define MY_DEBUG
-#define SLEEP_TIME 0
+/*For battery update every:
+* 1 hour = 3600
+* 12 hours = 43200
+* 24 hours = 86400
+*/
+#define SLEEP_TIME 43200
 // Enable and select radio type attached
 #define MY_RADIO_NRF24
 //#define MY_RADIO_RFM69
